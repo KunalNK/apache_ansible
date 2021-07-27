@@ -1,0 +1,29 @@
+---
+- hosts: web
+  become: true
+  gather_facts: no
+  vars:
+    httpd_port: 81
+  tasks:
+  - name: Install httpd
+    yum:
+     name: httpd
+     state: latest
+     
+  - name: Copy index.html to remote note
+    template:
+      src: index.html.j2
+      dest: /usr/share/httpd/noindex/index.html
+
+  - name: Changing the port number   
+    template:
+      src: httpd.conf.j2
+      dest: /etc/httpd/conf/httpd.conf
+
+  - name: Starting the httpd server
+    service:
+      name:  httpd
+      state: started
+
+
+#### httpd works on port 80
